@@ -30,13 +30,11 @@ ui <- dashboardPage(
         menuItem("Widgets", icon = icon("th"), tabName = "widgets", badgeLabel = "candidates", badgeColor = "green"),
         menuItem("years", icon = icon("calendar"),
                  menuSubItem("sub-item1", tabName = "subitem1")),
-        sliderInput("elect_yr", "Election Year",
-                    min = 1824,
-                    max = 2016,
-                    value = 2002,
-                    step = 4,
-                    sep = "")
-    )
+
+        
+        selectInput("elect_yr", label = "Select election year", choices = c(1824)),
+        tableOutput("yrs")
+    ), 
     
     ),
     
@@ -52,24 +50,52 @@ ui <- dashboardPage(
     ),
     
     fluidRow(
+        # box for sliderInput
+        box( width = 5,
+            sliderInput("elect_yr", "Select time period for timeseries analysis of election voter turnout",
+                        min = 1824,
+                        max = 2016,
+                        step = 4,
+                        sep = "",
+                        value = c(1824, 2016)) 
+        ),
+        
         # line graph of votes for selected time period
-        box(title = "Voter turnout timeseries ", solidHeader = TRUE, collapsible = TRUE, background = "green",
+        box(title = "Voter turnout timeseries ", solidHeader = TRUE, collapsible = TRUE, background = "green",width = 7,
             plotOutput("timeseries", height = 350)),
         
-        sliderInput("elect_yr", "Select time period for timeseries analysis of election voter turnout",
-                    min = 1824,
-                    max = 2016,
-                    step = 4,
-                    sep = "",
-                    value = c(1824, 2016)),
+       
         
        
     ),
     
     fluidRow(
-        box(
+      
+        box( 
             # box for describing winner whether unpopular or not 
-            title = "Status of victory", width=4, textOutput("status"), background = "yellow"
+            title = "Status of victory", width=4, textOutput("status"), background = "yellow",
+            footer = "Losing the popular votes but winning the electoral colleage makes it unpopular victory",
+            textOutput("unpopolarType")
+        ),
+        
+        box(width = 4, solidHeader = TRUE, background = "red",
+            footer = "Based on the year span selected we can calculated the frequency of winning election by various parties",
+            title = "Party Profile", 
+            textOutput("partyprof")
+        ),
+        
+        box(width = 4, solidHeader = TRUE, background = "blue", footer = "Election turnout is important for democracy",
+            title = "Election turnout",
+            valueBoxOutput("ecTurnout"))
+    ),
+    
+    fluidRow(
+        # box of radiobuttons for selecting themes
+        box(background = "black", width = 3,
+            radioButtons("theme", "Choose a theme for the graph", choiceNames = c("Dark mode",
+                                                                                  "Gray mode",
+                                                                                  "Classic mode"),
+                         choiceValues = c("theme_dw", "theme_gray", "theme_classic"))
         )
     ))
 )
