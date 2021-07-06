@@ -32,9 +32,9 @@ ui <- dashboardPage(
                  menuSubItem("sub-item1", tabName = "subitem1")),
 
         
-        selectInput("elect_yr", label = "Select election year", choices = c(1824)),
+        selectInput("select_yr", label = "Select election year", choices = c(unique(elections_historic$year))),
         tableOutput("yrs")
-    ), 
+    )
     
     ),
     
@@ -60,7 +60,7 @@ ui <- dashboardPage(
                         value = c(1824, 2016)) 
         ),
         
-        # line graph of votes for selected time period
+        # line graph plot of votes for selected time period
         box(title = "Voter turnout timeseries ", solidHeader = TRUE, collapsible = TRUE, background = "green",width = 7,
             plotOutput("timeseries", height = 350)),
         
@@ -77,13 +77,14 @@ ui <- dashboardPage(
             footer = "Losing the popular votes but winning the electoral colleage makes it unpopular victory",
             textOutput("unpopolarType")
         ),
-        
+        # box for ploting bar graph of frequency of party winning for selected period
         box(width = 4, solidHeader = TRUE, background = "red",
             footer = "Based on the year span selected we can calculated the frequency of winning election by various parties",
             title = "Party Profile", 
-            textOutput("partyprof")
+            plotOutput("partyprof")
         ),
         
+        # box for turnout
         box(width = 4, solidHeader = TRUE, background = "blue", footer = "Election turnout is important for democracy",
             title = "Election turnout",
             valueBoxOutput("ecTurnout"))
